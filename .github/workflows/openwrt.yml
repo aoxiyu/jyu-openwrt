@@ -15,6 +15,12 @@ on:
         default: 'false'
         type: boolean
 
+      CLEAN_CACHE:
+        description: '清理编译缓存'
+        required: false
+        default: 'false'
+        type: boolean
+
 # 定时触发编译(1,5,10,15,20,25,30早3点)
   schedule:
     - cron: 0 17 4,9,14,19,24,31 * *
@@ -59,6 +65,15 @@ jobs:
         echo "HOME=${GITHUB_WORKSPACE}/openwrt" >> $GITHUB_ENV
         echo "WORKPATH=${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}" >> $GITHUB_ENV
 
+    - name: 清理编译缓存（如需要）
+      if: github.event.inputs.CLEAN_CACHE == 'true'
+      run: |
+        echo "正在强制清理编译缓存..."
+        # 清理可能的现有openwrt目录
+        sudo rm -rf /github-builder/openwrt
+        sudo rm -rf $GITHUB_WORKSPACE/openwrt
+        echo "编译缓存已清理"
+
     - name: 初始化系统环境
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -72,7 +87,7 @@ jobs:
                    bzip2 ccache clang cmake cpio curl device-tree-compiler ecj flex gawk gcc-multilib \
                    g++-multilib git gnutls-dev gperf haveged help2man intltool lib32gcc-s1 libc6-i386 libelf-dev \
                    libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses-dev \
-                   libreadline-dev libssl-dev libpython3-dev libtool libyaml-dev libz-dev lld llvm lrzsz msmtp \
+                   libreadline-dev libssl-dev libpython3-dev libtool libyaml-dev libz-dev llld llvm lrzsz msmtp \
                    ninja-build p7zip p7zip-full patch pkgconf python3 python3 python3-ply python3-docutils \
                    python3-pyelftools qemu-utils re2c rsync scons squashfs-tools subversion swig texinfo uglifyjs \
                    upx-ucl unzip vim wget xmlto xxd zlib1g-dev zstd libfuse-dev gettext genisoimage python3-setuptools || true
