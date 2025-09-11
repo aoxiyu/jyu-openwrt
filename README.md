@@ -1,6 +1,6 @@
 # OpenWrt-AutoBuild
 
-#### 基于OpenWrt-Actions-Lean+Lienol+ImmortalWrt-自动化在线编译脚本  
+#### 基于OpenWrt-Actions-Lean-自动化在线编译脚本  
 
  ##### 固件更新下载:
 [![GitHub release (latest by date)](固件更新下载)](https://github.com/aoxijy/aoxi-openwrt/releases)
