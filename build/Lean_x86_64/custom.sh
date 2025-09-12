@@ -209,9 +209,9 @@ EOF
 
 # 编译PVE/KVM、Hyper-V、VMware镜像以及镜像填充
 cat >> .config <<EOF
-CONFIG_QCOW2_IMAGES=y
-CONFIG_VHDX_IMAGES=y
-CONFIG_VMDK_IMAGES=y
+CONFIG_QCOW2_IMAGES=n
+CONFIG_VHDX_IMAGES=n
+CONFIG_VMDK_IMAGES=n
 CONFIG_TARGET_IMAGES_PAD=y
 EOF
 
@@ -219,12 +219,18 @@ EOF
 cat >> .config <<EOF
 CONFIG_PACKAGE_luci-app-openclash=y #OpenClash客户端
 CONFIG_PACKAGE_luci-app-nikki=y #nikki 客户端
-CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
+# CONFIG_PACKAGE_luci-app-powerof is not set
 CONFIG_PACKAGE_luci-app-ssr-plus=y
 CONFIG_PACKAGE_luci-app-passwall=y
 CONFIG_PACKAGE_luci-app-easytier=y
 CONFIG_PACKAGE_luci-app-npc=y
-CONFIG_PACKAGE_luci-app-shutdown=y
+CONFIG_PACKAGE_luci-app-upnp=n
+CONFIG_PACKAGE_luci-app-ddns=n
+CONFIG_PACKAGE_luci-app-vlmcsd=n
+CONFIG_PACKAGE_luci-app-ksmbd=n
+CONFIG_PACKAGE_luci-app-wol=n
+CONFIG_PACKAGE_luci-app-access-control=n
+# CONFIG_PACKAGE_luci-app-shutdown is not set
 CONFIG_PACKAGE_luci-theme-argon=y
 CONFIG_PACKAGE_luci-app-argon-config=y
 EOF
@@ -262,7 +268,7 @@ CONFIG_PACKAGE_libcap-bin=y
 CONFIG_PACKAGE_ip6tables-mod-nat=y
 CONFIG_PACKAGE_iptables-mod-extra=y
 # CONFIG_PACKAGE_vsftpd is not set
-CONFIG_PACKAGE_openssh-sftp-server=y
+# CONFIG_PACKAGE_openssh-sftp-server is not set
 CONFIG_PACKAGE_qemu-ga=y
 CONFIG_PACKAGE_autocore-x86=y
 EOF
