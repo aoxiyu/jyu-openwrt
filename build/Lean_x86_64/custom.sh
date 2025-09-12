@@ -223,7 +223,7 @@ CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
 CONFIG_PACKAGE_luci-app-ssr-plus=y
 CONFIG_PACKAGE_luci-app-passwall=y
 CONFIG_PACKAGE_luci-app-easytier=y
-CONFIG_PACKAGE_luci-app-npc=y
+# CONFIG_PACKAGE_luci-i18n-npc-zh-cn is not set
 CONFIG_PACKAGE_luci-app-shutdown=y
 CONFIG_PACKAGE_luci-theme-argon=y
 CONFIG_PACKAGE_luci-app-argon-config=y
