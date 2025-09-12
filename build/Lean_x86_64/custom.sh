@@ -261,7 +261,7 @@ CONFIG_PACKAGE_libcap=y
 CONFIG_PACKAGE_libcap-bin=y
 CONFIG_PACKAGE_ip6tables-mod-nat=y
 CONFIG_PACKAGE_iptables-mod-extra=y
-CONFIG_PACKAGE_vsftpd=y
+# CONFIG_PACKAGE_vsftpd is not set
 CONFIG_PACKAGE_openssh-sftp-server=y
 CONFIG_PACKAGE_qemu-ga=y
 CONFIG_PACKAGE_autocore-x86=y
