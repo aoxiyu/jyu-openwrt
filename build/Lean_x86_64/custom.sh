@@ -20,7 +20,6 @@ git clone https://github.com/aoxijy/aoxi-package.git -b master package/aoxi-pack
 rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf feeds/luci/applications/luci-app-openclash
 rm -rf feeds/luci/applications/luci-app-ksmbd
-rm -rf feeds/luci/themes/luci-app-arpbind
 rm -rf feeds/luci/themes/luci-theme-argon
 
 # 自定义定制选项
@@ -227,7 +226,7 @@ CONFIG_PACKAGE_luci-app-passwall=y
 CONFIG_PACKAGE_luci-app-easytier=y
 CONFIG_PACKAGE_luci-app-npc=n
 # CONFIG_PACKAGE_luci-app-npc= is not set
-# CONFIG_PACKAGE_luci-app-arpbind= is not set
+# CONFIG_PACKAGE_luci-app-arpbind is not set
 # CONFIG_PACKAGE_luci-app-upnp is not set
 # CONFIG_PACKAGE_luci-app-ddns is not set
 # CONFIG_PACKAGE_luci-app-vlmcsd is not set
