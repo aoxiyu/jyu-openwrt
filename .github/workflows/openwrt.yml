@@ -322,6 +322,11 @@ jobs:
         echo ""
         echo "4. 检查已安装的包:"
         find staging_dir -name "*.install" -exec grep -l "vsftpd" {} \; | head -n 5
+        
+    - name: 查看固件产物目录内容
+      run: |
+        ls -lhR openwrt/bin/targets/
+ 
 
     - name: 整理固件文件
       if: success()
