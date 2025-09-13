@@ -19,7 +19,7 @@ git clone https://github.com/aoxijy/aoxi-package.git -b master package/aoxi-pack
 # 删除部分默认包
 rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf feeds/luci/applications/luci-app-openclash
-rm -rf feeds/luci/applications/luci-app-ksmbd
+rm -rf feeds/luci/applications/luci-app-npc
 rm -rf feeds/luci/themes/luci-theme-argon
 
 # 自定义定制选项
@@ -38,7 +38,7 @@ fi
 #
 sed -i 's#192.168.1.1#172.18.18.222#g' $NET                                               # 定制默认IP为172.18.18.222
 sed -i 's@.*CYXluq4wUazHjmCDBCqXF*@#&@g' $ZZZ                                             # 取消系统默认密码
-sed -i "s/LEDE /GanQuanRu build $(TZ=UTC-8 date "+%Y.%m.%d") @ LEDE /g" $ZZZ                    # 增加自己个性名称
+sed -i "s/LEDE /ONE build $(TZ=UTC-8 date "+%Y.%m.%d") @ LEDE /g" $ZZZ                    # 增加自己个性名称
 echo "uci set luci.main.mediaurlbase=/luci-static/argon" >> $ZZZ                          # 设置默认主题
 
 # ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●● #
@@ -212,7 +212,7 @@ EOF
 cat >> .config <<EOF
 CONFIG_QCOW2_IMAGES=n
 CONFIG_VHDX_IMAGES=n
-CONFIG_VMDK_IMAGES=y
+CONFIG_VMDK_IMAGES=n
 CONFIG_TARGET_IMAGES_PAD=y
 EOF
 
@@ -224,8 +224,9 @@ CONFIG_PACKAGE_luci-app-nikki=y #nikki 客户端
 CONFIG_PACKAGE_luci-app-ssr-plus=y
 CONFIG_PACKAGE_luci-app-passwall=y
 CONFIG_PACKAGE_luci-app-easytier=y
-# CONFIG_PACKAGE_luci-app-npc is not set
-# CONFIG_PACKAGE_luci-app-arpbind is not set
+CONFIG_PACKAGE_luci-app-npc=n
+# CONFIG_PACKAGE_luci-app-npc= is not set
+# CONFIG_PACKAGE_luci-app-arpbind= is not set
 # CONFIG_PACKAGE_luci-app-upnp is not set
 # CONFIG_PACKAGE_luci-app-ddns is not set
 # CONFIG_PACKAGE_luci-app-vlmcsd is not set
@@ -273,9 +274,9 @@ CONFIG_PACKAGE_kmod-tun=y
 CONFIG_PACKAGE_snmpd=y
 CONFIG_PACKAGE_libcap=y
 CONFIG_PACKAGE_libcap-bin=y
-# CONFIG_PACKAGE_ksmbd-server is not set
 CONFIG_PACKAGE_ip6tables-mod-nat=y
 CONFIG_PACKAGE_iptables-mod-extra=y
+# CONFIG_PACKAGE_ksmbd-server is not set
 # CONFIG_PACKAGE_vsftpd is not set
 # CONFIG_PACKAGE_openssh-sftp-server is not set
 CONFIG_PACKAGE_qemu-ga=y
@@ -287,37 +288,10 @@ cat >> .config <<EOF
 CONFIG_HAS_FPU=y
 EOF
 
-# 添加基础依赖包，确保编译成功
-cat >> .config <<EOF
-CONFIG_PACKAGE_libc=y
-CONFIG_PACKAGE_libstdcpp=y
-CONFIG_PACKAGE_zlib=y
-CONFIG_PACKAGE_libopenssl=y
-CONFIG_PACKAGE_libpcre=y
-CONFIG_PACKAGE_libuuid=y
-CONFIG_PACKAGE_libjson-c=y
-EOF
-
-# 添加NPC依赖
-cat >> .config <<EOF
-CONFIG_PACKAGE_npc=y
-EOF
-
 
 # 
 # ●●●●●●●●●●●●●●●●●●●●●●●●固件定制部分结束●●●●●●●●●●●●●●●●●●●●●●●● #
 # 
-
-# 运行defconfig解决依赖关系
-make defconfig
-
-# 检查关键依赖是否满足
-echo "检查关键依赖..."
-if grep -q "CONFIG_PACKAGE_luci-app-npc=y" .config && ! grep -q "CONFIG_PACKAGE_npc=y" .config; then
-  echo "警告: luci-app-npc 已启用但 npc 未启用，自动修复..."
-  echo "CONFIG_PACKAGE_npc=y" >> .config
-  make defconfig
-fi
 
 sed -i 's/^[ \t]*//g' ./.config
 
