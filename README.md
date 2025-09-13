@@ -22,21 +22,14 @@
 　├── 防火墙<br/>
 　├── 路由表<br/>
 　├── 系统日志<br/>
-　├── 内核日志<br/>
 　├── 系统进程<br/>
-　├── 实时信息<br/>
-　├── 实时监控<br/>
-　├── WireGuard状态<br/>
-　├── 负载均衡<br/>
-　└── 释放内存
+　└── 实时信息<br/>
 </details>
 <details>
 <summary><b>├── 系统</b></summary>
 　├── 系统<br/>
-　├── Web管理<br/>
 　├── 管理权<br/>
 　├── 软件包<br/>
-　├── TTYD 终端<br/>
 　├── 启动项<br/>
 　├── 计划任务<br/>
 　├── 挂载点<br/>
@@ -45,9 +38,7 @@
 　├── 定时设置<br/>
 　├── 文件传输<br/>
 　├── Argon 主题设置<br/>
-　├── Design 主题设置<br/>
-　├── 重启<br/>
-　└── 关机
+　└── 重启<br/>
 </details>
 <details>
 <summary><b>├── 服务</b></summary>
@@ -61,18 +52,13 @@
 <details>
 <summary><b>├── 网络</b></summary>
 　├── 接口<br/>
+　├── 路由<br/>
 　├── DHCP/DNS<br/>
-　├── 主机名<br/>
-　├── IP/MAC 绑定<br/>
-　├── 静态路由<br/>
+  ├── 网络诊断<br/>
 　├── 防火墙<br/>
-　├── 诊断<br/>
-　├── IP限速<br/>
-　├── Socat<br/>
-　├── Turbo ACC 网络加速<br/>
-　├── 多线多拨<br/>
-　└── 负载均衡
+　└── Turbo ACC 网络加速<br/>
 </details>
+<details>  
 　└── <b>退出</b>
 </details>
 
