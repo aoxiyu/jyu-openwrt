@@ -52,26 +52,11 @@
 <details>
 <summary><b>├── 服务</b></summary>
 　├── PassWall<br/>
-　├── PassWall2  (arm)<br/>
-　├── Hello World<br/>
-　├── AdGuard Home<br/>
 　├── ShadowSocksR Plus+<br/>
-　├── DDNSTO 远程控制<br/>
-　├── 应用过滤<br/>
-　├── 网站域名黑白名单配置<br/>
-　├── 全能推送<br/>
-　├── 上网时间控制<br/>
+　├── EasyTier<br/>
 　├── OpenClash<br/>
-　├── Lucky<br/>
-　├── 动态 DNS<br/>
-　├── SmartDNS<br/>
-　├── MosDNS<br/>
-　├── 网络唤醒<br/>
-　├── Frps<br/>
-　├── UPnP<br/>
-　├── Frp 内网穿透<br/>
-　├── KMS 服务器<br/>
-　└── Nps 内网穿透
+　├── Nps 内网穿透<br/>
+　└── Nikki<br/>
 </details>
 <details>
 <summary><b>├── Docker  (arm)</b></summary>
