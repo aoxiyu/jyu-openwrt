@@ -232,7 +232,7 @@ CONFIG_PACKAGE_luci-app-arpbind=n
 # CONFIG_PACKAGE_luci-app-wol is not set
 # CONFIG_PACKAGE_luci-app-access-control is not set
 # CONFIG_PACKAGE_luci-app-shutdown is not set
-CONFIG_PACKAGE_luci-app-ksmbd is not set
+# CONFIG_PACKAGE_luci-app-ksmbd is not set
 # CONFIG_PACKAGE_luci-app-vsftpd is not set
 # CONFIG_PACKAGE_luci-i18n-ksmbd-zh-cn is not set
 # CONFIG_PACKAGE_luci-app-nlbwmon is not set
