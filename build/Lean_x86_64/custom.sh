@@ -19,7 +19,7 @@ git clone https://github.com/aoxijy/aoxi-package.git -b master package/aoxi-pack
 # 删除部分默认包
 rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf feeds/luci/applications/luci-app-openclash
-rm -rf feeds/luci/applications/luci-app-npc
+rm -rf feeds/luci/applications/luci-app-ksmbd
 rm -rf feeds/luci/themes/luci-theme-argon
 
 # 自定义定制选项
