@@ -59,38 +59,6 @@
 　└── Nikki<br/>
 </details>
 <details>
-<summary><b>├── Docker  (arm)</b></summary>
-　├── 概览<br/>
-　├── 容器<br/>
-　├── 镜像<br/>
-　├── 网络<br/>
-　├── 存储卷<br/>
-　├── 事件<br/>
-　└── 设置
-</details>
-<details>
-<summary><b>├── 网络存储</b></summary>
-　├── 文件浏览器<br/>
-　├── NFS 管理<br/>
-　├── Alist 文件列表<br/>
-　├── USB 打印服务器<br/>
-　├── 硬盘休眠<br/>
-　├── 打印服务器<br/>
-　├── 网络共享<br/>
-　├── Aria2 配置<br/>
-　└── FTP 服务器
-</details>
-<details>
-<summary><b>├── VPN</b></summary>
-　├── V2ray 服务器<br/>
-　├── N2N VPN<br/>
-　├── SoftEther VPN 服务器<br/>
-　├── OpenVPN 服务器<br/>
-　├── IPSec VPN 服务器<br/>
-　├── PPTP VPN 服务器<br/>
-　└── ZeroTier
-</details>
-<details>
 <summary><b>├── 网络</b></summary>
 　├── 接口<br/>
 　├── DHCP/DNS<br/>
@@ -104,13 +72,6 @@
 　├── Turbo ACC 网络加速<br/>
 　├── 多线多拨<br/>
 　└── 负载均衡
-</details>
-<details>
-<summary><b>├── 带宽监控</b></summary>
-　├── 显示<br/>
-　├── 配置<br/>
-　├── 备份<br/>
-　└── 实时流量监测
 </details>
 　└── <b>退出</b>
 </details>
