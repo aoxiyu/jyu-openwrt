@@ -225,13 +225,15 @@ CONFIG_PACKAGE_luci-app-ssr-plus=y
 CONFIG_PACKAGE_luci-app-passwall=y
 CONFIG_PACKAGE_luci-app-easytier=y
 CONFIG_PACKAGE_luci-app-npc=y
+CONFIG_PACKAGE_luci-app-arpbind=n
 # CONFIG_PACKAGE_luci-app-upnp is not set
 # CONFIG_PACKAGE_luci-app-ddns is not set
 # CONFIG_PACKAGE_luci-app-vlmcsd is not set
 # CONFIG_PACKAGE_luci-app-wol is not set
 # CONFIG_PACKAGE_luci-app-access-control is not set
 # CONFIG_PACKAGE_luci-app-shutdown is not set
-# CONFIG_PACKAGE_luci-app-ksmbd is not set
+CONFIG_PACKAGE_luci-app-ksmbd=n
+# CONFIG_PACKAGE_luci-app-vsftpd is not set
 # CONFIG_PACKAGE_luci-i18n-ksmbd-zh-cn is not set
 # CONFIG_PACKAGE_luci-app-nlbwmon is not set
 # CONFIG_PACKAGE_luci-i18n-nlbwmon-zh-cn is not set
@@ -271,9 +273,9 @@ CONFIG_PACKAGE_kmod-tun=y
 CONFIG_PACKAGE_snmpd=y
 CONFIG_PACKAGE_libcap=y
 CONFIG_PACKAGE_libcap-bin=y
+CONFIG_PACKAGE_ksmbd-server=n
 CONFIG_PACKAGE_ip6tables-mod-nat=y
 CONFIG_PACKAGE_iptables-mod-extra=y
-# CONFIG_PACKAGE_ksmbd-server is not set
 # CONFIG_PACKAGE_vsftpd is not set
 # CONFIG_PACKAGE_openssh-sftp-server is not set
 CONFIG_PACKAGE_qemu-ga=y
@@ -285,10 +287,37 @@ cat >> .config <<EOF
 CONFIG_HAS_FPU=y
 EOF
 
+# 添加基础依赖包，确保编译成功
+cat >> .config <<EOF
+CONFIG_PACKAGE_libc=y
+CONFIG_PACKAGE_libstdcpp=y
+CONFIG_PACKAGE_zlib=y
+CONFIG_PACKAGE_libopenssl=y
+CONFIG_PACKAGE_libpcre=y
+CONFIG_PACKAGE_libuuid=y
+CONFIG_PACKAGE_libjson-c=y
+EOF
+
+# 添加NPC依赖
+cat >> .config <<EOF
+CONFIG_PACKAGE_npc=y
+EOF
+
 
 # 
 # ●●●●●●●●●●●●●●●●●●●●●●●●固件定制部分结束●●●●●●●●●●●●●●●●●●●●●●●● #
 # 
+
+# 运行defconfig解决依赖关系
+make defconfig
+
+# 检查关键依赖是否满足
+echo "检查关键依赖..."
+if grep -q "CONFIG_PACKAGE_luci-app-npc=y" .config && ! grep -q "CONFIG_PACKAGE_npc=y" .config; then
+  echo "警告: luci-app-npc 已启用但 npc 未启用，自动修复..."
+  echo "CONFIG_PACKAGE_npc=y" >> .config
+  make defconfig
+fi
 
 sed -i 's/^[ \t]*//g' ./.config
 
