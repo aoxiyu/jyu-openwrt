@@ -21,6 +21,65 @@ rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf feeds/luci/applications/luci-app-openclash
 rm -rf feeds/luci/themes/luci-theme-argon
 
+# 创建预安装目录和脚本
+echo "创建预安装目录和脚本..."
+mkdir -p files/etc/pre_install
+mkdir -p files/etc/uci-defaults
+
+# 创建预安装脚本
+cat > files/etc/uci-defaults/98-pre_install << 'EOF'
+#!/bin/sh
+
+PKG_DIR="/etc/pre_install"
+
+if [ -d "$PKG_DIR" ] && [ -n "$(ls -A $PKG_DIR 2>/dev/null)" ]; then
+
+    echo "开始安装预置IPK包..."
+
+    # 第一阶段：优先安装架构特定的包 (e.g., npc_0.26.26-r16_x86_64.ipk)
+    # 这些通常是基础程序或内核模块，LuCI包依赖它们。
+    for pkg in $PKG_DIR/*_*.ipk; do # 模式匹配包含下划线_的包名
+        if [ -f "$pkg" ]; then # 确保是文件，防止没匹配到时循环到通配符本身
+            echo "优先安装基础包: $(basename "$pkg")"
+            opkg install "$pkg" --force-depends
+        fi
+    done
+
+    # 第二阶段：安装所有架构通用的包 (e.g., luci-app-npc_all.ipk)
+    # 这些通常是LuCI界面、主题或脚本，它们依赖第一阶段安装的包。
+    for pkg in $PKG_DIR/*_all.ipk; do
+        if [ -f "$pkg" ]; then
+            echo "安装LuCI应用包: $(basename "$pkg")"
+            opkg install "$pkg" --force-depends
+        fi
+    done
+
+    # 清理现场
+    echo "预安装完成，清理临时文件..."
+    rm -rf $PKG_DIR
+fi
+
+exit 0
+EOF
+
+# 设置预安装脚本权限
+chmod +x files/etc/uci-defaults/98-pre_install
+
+# 下载预安装的IPK包
+echo "下载预安装IPK包..."
+# 示例：下载npc和luci-app-npc
+wget -O files/etc/pre_install/npc_0.26.26-r16_x86_64.ipk https://example.com/path/to/npc_0.26.26-r16_x86_64.ipk || echo "npc包下载失败，将继续编译"
+wget -O files/etc/pre_install/luci-app-npc_all.ipk https://example.com/path/to/luci-app-npc_all.ipk || echo "luci-app-npc包下载失败，将继续编译"
+
+# 检查下载是否成功
+if [ ! -f "files/etc/pre_install/npc_0.26.26-r16_x86_64.ipk" ]; then
+    echo "警告: npc包下载失败! 预安装将跳过此包"
+fi
+
+if [ ! -f "files/etc/pre_install/luci-app-npc_all.ipk" ]; then
+    echo "警告: luci-app-npc包下载失败! 预安装将跳过此包"
+fi
+
 # 自定义定制选项
 NET="package/base-files/luci2/bin/config_generate"
 ZZZ="package/lean/default-settings/files/zzz-default-settings"
