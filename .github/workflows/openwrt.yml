@@ -1,4 +1,4 @@
-name:Build Openwrt
+name: 编译OpenWrt固件(Lean_x86_64)
 
 on:
   workflow_dispatch:
