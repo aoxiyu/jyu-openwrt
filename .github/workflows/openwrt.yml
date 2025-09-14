@@ -1,4 +1,4 @@
-name: 编译OpenWrt固件(Lean_x86_64)
+name:Build Openwrt
 
 on:
   workflow_dispatch:
@@ -161,44 +161,51 @@ jobs:
         START_TIME=`date +'%Y-%m-%d %H:%M:%S'`
         echo "START_SECONDS=$(date --date="$START_TIME" +%s)" >> $GITHUB_ENV
 
-- name: 加载源, 定制文件并生成自定义配置
-  run: |
-    cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
-    cd openwrt
+    - name: 加载源,定制文件并生成自定义配置
+      run: |
+        # 复制配置文件到源码目录
+        cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
+        cd openwrt
 
-    echo "执行脚本"
-    if [ -f "${WORKPATH}/$CUSTOM_SH" ]; then
-    (
-      chmod +x "${WORKPATH}/$CUSTOM_SH"
-      /bin/bash "${WORKPATH}/$CUSTOM_SH"
-    )
-    fi
+        echo "执行脚本"
+        if [ -f "${WORKPATH}/$CUSTOM_SH" ]; then
+        (
+          chmod +x ${WORKPATH}/$CUSTOM_SH
+          /bin/bash "${WORKPATH}/$CUSTOM_SH"
+        )
+        fi
 
-    echo "写入配置文件..."
-    mv ${WORKPATH}/$CONFIG_FILE .config
+        echo "复制脚本文件..."
+        if [ -n "$(ls -A "${GITHUB_WORKSPACE}/openwrt/build/scripts/files" 2>/dev/null)" ]; then
+          if [ -d "files" ];then
+           cp -rf ${GITHUB_WORKSPACE}/openwrt/build/scripts/files/* files
+           chmod -R 755 ${HOME}/files
+          else
+           cp -rf ${GITHUB_WORKSPACE}/openwrt/build/scripts/files/ files
+           chmod -R 755 ${HOME}/files
+          fi
+        fi
 
-    # 强制覆盖用户配置
-    echo "强制使用用户自定义配置覆盖..."
-    if [ -f "../Lean_x86_64.config" ]; then
-      echo "发现 Lean_x86_64.config，覆盖当前配置..."
-      cp -f "../Lean_x86_64.config" .config
-      echo "用户自定义配置已覆盖当前配置。"
-    else
-      echo "未找到 Lean_x86_64.config，继续使用原有配置。"
-    fi
+        echo "复制配置文件..."
+        if [ -n "$(ls -A "${WORKPATH}/files" 2>/dev/null)" ]; then
+          if [ -d "files" ];then
+           cp -rf ${WORKPATH}/files/* files
+           chmod -R 755 ${WORKPATH}/files
+          else
+           cp -rf ${WORKPATH}/files/ files
+           chmod -R 755 ${WORKPATH}/files
+          fi
+        fi
 
-    # 禁用干预的默认配置
-    echo "禁用默认配置干预..."
-    sed -i 's/CONFIG_DEFAULT_luci-app-accesscontrol=y/# CONFIG_DEFAULT_luci-app-accesscontrol is not set/' .config
-    sed -i 's/CONFIG_DEFAULT_luci-app-arpbind=y/# CONFIG_DEFAULT_luci-app-arpbind is not set/' .config
+        echo "复制源码文件..."
+        if [ -n "$(ls -A "${WORKPATH}/sources" 2>/dev/null)" ]; then
+         cp -Rf ${WORKPATH}/sources/* ./
+        fi
 
-    make defconfig
-
-    # 输出最终配置文件
-    echo "最终配置文件内容："
-    cat .config
+        echo "写入配置文件..."
+        mv ${WORKPATH}/$CONFIG_FILE .config
         
-        
+
         make defconfig
 
     - name: SSH远程连接服务器
