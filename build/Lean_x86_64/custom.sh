@@ -223,8 +223,7 @@ CONFIG_PACKAGE_luci-app-nikki=y #nikki 客户端
 CONFIG_PACKAGE_luci-app-ssr-plus=y
 CONFIG_PACKAGE_luci-app-passwall=y
 CONFIG_PACKAGE_luci-app-easytier=y
-CONFIG_PACKAGE_luci-app-npc=n
-# CONFIG_PACKAGE_luci-app-npc= is not set
+# CONFIG_PACKAGE_luci-app-npc is not set
 # CONFIG_PACKAGE_luci-app-arpbind is not set
 # CONFIG_PACKAGE_luci-app-upnp is not set
 # CONFIG_PACKAGE_luci-app-ddns is not set
@@ -275,6 +274,7 @@ CONFIG_PACKAGE_libcap=y
 CONFIG_PACKAGE_libcap-bin=y
 CONFIG_PACKAGE_ip6tables-mod-nat=y
 CONFIG_PACKAGE_iptables-mod-extra=y
+# CONFIG_PACKAGE_ksmbd is not set
 # CONFIG_PACKAGE_ksmbd-server is not set
 # CONFIG_PACKAGE_vsftpd is not set
 # CONFIG_PACKAGE_openssh-sftp-server is not set
