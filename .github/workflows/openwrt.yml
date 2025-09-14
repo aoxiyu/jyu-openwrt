@@ -167,10 +167,16 @@ jobs:
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cd openwrt
 
+        # 替换默认配置文件（如果仓库根目录有Lean_x86_64.config）
+        if [ -f "../Lean_x86_64.config" ]; then
+          echo "替换默认配置文件..."
+          cp -f "../Lean_x86_64.config" .config
+        fi
+
         echo "执行脚本"
         if [ -f "${WORKPATH}/$CUSTOM_SH" ]; then
         (
-          chmod +x ${WORKPATH}/$CUSTOM_SH
+          chmod +x "${WORKPATH}/$CUSTOM_SH"
           /bin/bash "${WORKPATH}/$CUSTOM_SH"
         )
         fi
