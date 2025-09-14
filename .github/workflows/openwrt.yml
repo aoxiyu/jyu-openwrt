@@ -21,7 +21,6 @@ on:
         default: 'false'
         type: boolean
 
-# 定时触发编译(1,5,10,15,20,25,30早3点)
   schedule:
     - cron: 0 17 4,9,14,19,24,31 * *
 
@@ -61,7 +60,6 @@ jobs:
         echo "UPLOAD_CONFIG=${UPLOAD_CONFIG}" >> $GITHUB_ENV
         echo "UPLOAD_RELEASE=${UPLOAD_RELEASE}" >> $GITHUB_ENV
         echo "TELEGRAM_BOT=${TELEGRAM_BOT}" >> $GITHUB_ENV
-        #添加变量
         echo "HOME=${GITHUB_WORKSPACE}/openwrt" >> $GITHUB_ENV
         echo "WORKPATH=${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}" >> $GITHUB_ENV
 
@@ -69,7 +67,6 @@ jobs:
       if: github.event.inputs.CLEAN_CACHE == 'true'
       run: |
         echo "正在强制清理编译缓存..."
-        # 清理可能的现有openwrt目录
         sudo rm -rf /github-builder/openwrt
         sudo rm -rf $GITHUB_WORKSPACE/openwrt
         echo "编译缓存已清理"
@@ -163,15 +160,8 @@ jobs:
 
     - name: 加载源,定制文件并生成自定义配置
       run: |
-        # 复制配置文件到源码目录
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cd openwrt
-
-        # 替换默认配置文件（如果仓库根目录有Lean_x86_64.config）
-        if [ -f "../Lean_x86_64.config" ]; then
-          echo "替换默认配置文件..."
-          cp -f "../Lean_x86_64.config" .config
-        fi
 
         echo "执行脚本"
         if [ -f "${WORKPATH}/$CUSTOM_SH" ]; then
@@ -216,6 +206,16 @@ jobs:
         if grep -q "CONFIG_PACKAGE_vsftpd=y" .config && grep -q "CONFIG_PACKAGE_vsftpd-alt=y" .config; then
           echo "发现 vsftpd 和 vsftpd-alt 冲突，解决中..."
           sed -i 's/CONFIG_PACKAGE_vsftpd-alt=y/# CONFIG_PACKAGE_vsftpd-alt is not set/' .config
+        fi
+
+        # 在所有定制化操作完成后，强制使用用户的 Lean_x86_64.config 覆盖
+        echo "强制使用用户自定义配置覆盖..."
+        if [ -f "../Lean_x86_64.config" ]; then
+          echo "发现 Lean_x86_64.config，覆盖当前配置..."
+          cp -f "../Lean_x86_64.config" .config
+          echo "用户自定义配置已覆盖当前配置。"
+        else
+          echo "未找到 Lean_x86_64.config，继续使用原有配置。"
         fi
         
         make defconfig
@@ -265,8 +265,8 @@ jobs:
         grep -i CONFIG_PACKAGE_luci-theme .config | grep  -v \# >> Plug-in
         sed -i '/INCLUDE/d' Plug-in > /dev/null 2>&1
         sed -i 's/CONFIG_PACKAGE_/、/g' Plug-in
-        sed -i '/Transparent_Proxy/d' Plug-in > /dev/null 2>&1 #排除 luci-app-passwall_Transparent_Proxy
-        sed -i '/qbittorrent-simple_dynamic/d' Plug-in > /dev/null 2>&1 #排除 luci-app-qbittorrent-simple_dynamic
+        sed -i '/Transparent_Proxy/d' Plug-in > /dev/null 2>&1
+        sed -i '/qbittorrent-simple_dynamic/d' Plug-in > /dev/null 2>&1
         sed -i 's/=y/\ /g' Plug-in
         awk '$0=NR$0' Plug-in > Plug-2
         awk '{print "	" $0}' Plug-2 > Plug-in
@@ -332,7 +332,6 @@ jobs:
     - name: 查看固件产物目录内容
       run: |
         ls -lhR openwrt/bin/targets/
- 
 
     - name: 整理固件文件
       if: success()
@@ -404,14 +403,14 @@ jobs:
       with:
         token: ${{ secrets.MY_GITHUB_TOKEN }}
         repository: ${{ github.repository }}
-        retain_days: 30     #保留最后多少记录不删除
+        retain_days: 30
         keep_minimum_runs: 0
 
     - name: 删除自动发布的旧固件
       uses: shidahuilang/delete-older-releases@main
       if: steps.compile.outcome == 'success' && env.UPLOAD_RELEASE == 'true'
       with:
-        keep_latest: 20         #保留多少个releases不删除
+        keep_latest: 20
         delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
