@@ -16,11 +16,6 @@ git clone https://github.com/aoxijy/aoxi-package.git -b master package/aoxi-pack
 ./scripts/feeds clean
 ./scripts/feeds update -a && ./scripts/feeds install -a -f
 
-# 强制删除 ksmbd 相关包
-echo "强制删除 ksmbd 相关包..."
-rm -rf feeds/luci/applications/luci-app-ksmbd 2>/dev/null || true
-rm -rf feeds/packages/net/ksmbd 2>/dev/null || true
-rm -rf package/network/services/ksmbd 2>/dev/null || true
 
 # 删除部分默认包
 rm -rf feeds/luci/applications/luci-app-qbittorrent
@@ -151,7 +146,7 @@ if [ -f "$ZZZ" ]; then
     # 增加个性名称
     BUILD_DATE=$(TZ=UTC-8 date "+%Y.%m.%d")
     sed -i "s/LEDE /GanQuanRu build $BUILD_DATE @ LEDE /g" "$ZZZ"
-    echo "已添加个性名称: GanQuanRu build $BUILD_DATE"
+    echo "已添加个性名称: ONE build $BUILD_DATE"
     
     # 设置默认主题
     echo "uci set luci.main.mediaurlbase='/luci-static/argon'" >> "$ZZZ"
@@ -403,3 +398,25 @@ EOF
 sed -i 's/^[ \t]*//g' .config
 
 echo "自定义配置文件创建完成"
+
+# 创建卸载ksmbd的脚本
+cat > files/etc/uci-defaults/99-remove_ksmbd << 'EOF'
+#!/bin/sh
+
+# 卸载ksmbd相关包
+echo "开始卸载ksmbd-server和luci-app-ksmbd..."
+opkg remove ksmbd-server luci-app-ksmbd --force-removal-of-dependent-packages --autoremove
+
+# 清理残留文件
+rm -rf /etc/config/ksmbd
+rm -rf /usr/lib/opkg/info/ksmbd-server.*
+rm -rf /usr/lib/opkg/info/luci-app-ksmbd.*
+rm -rf /usr/share/luci/menu.d/luci-app-ksmbd.json
+
+echo "ksmbd卸载完成"
+
+exit 0
+EOF
+
+# 设置卸载脚本权限
+chmod +x files/etc/uci-defaults/99-remove_ksmbd
