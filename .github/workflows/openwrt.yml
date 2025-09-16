@@ -80,14 +80,6 @@ jobs:
         sudo rm -rf /usr/local/share/boost
         sudo apt-get clean
 
-    - name: 创建模拟物理磁盘
-      run: |
-        echo "创建虚拟磁盘..."
-        dd if=/dev/zero of=swapfile bs=1M count=2048
-        mkswap swapfile
-        swapon swapfile
-        free -h
-
     - name: 下载Lean_x86_64源码
       run: |
         echo "克隆源码仓库..."
@@ -148,11 +140,20 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -delete
 
+    - name: 优化内存使用
+      run: |
+        echo "优化内存使用..."
+        # 减少并行编译任务数以降低内存使用
+        echo "将使用较少的并行任务编译以减少内存使用"
+        # 设置编译环境变量
+        export MAKE_ARGS="-j$(($(nproc) / 2))"
+
     - name: 开始编译固件
       run: |
         cd openwrt
         echo "开始编译..."
-        make -j$(($(nproc) + 1)) V=s 2>&1 | tee build.log | grep -E '^(CC|CXX|LD|INSTALL|make)'
+        # 使用减少的并行任务数
+        make $MAKE_ARGS V=s 2>&1 | tee build.log | grep -E '^(CC|CXX|LD|INSTALL|make)'
 
     - name: 检查空间使用情况
       run: |
