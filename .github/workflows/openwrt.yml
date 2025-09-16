@@ -116,7 +116,17 @@ jobs:
         
         echo "应用配置文件..."
         cp "../$CONFIG_FILE" .config
-        make defconfig
+        
+        # 确保配置文件正确
+        echo "检查配置文件..."
+        if [ ! -f .config ]; then
+          echo "错误: .config 文件不存在!"
+          exit 1
+        fi
+        
+        # 尝试修复可能的配置问题
+        echo "尝试修复配置..."
+        make defconfig || make defconfig
 
     - name: SSH远程连接服务器
       if: inputs.SSH_ACTION
@@ -129,14 +139,15 @@ jobs:
         cd openwrt
         echo "编译信息:"
         echo "=========================================="
-        make -s info
+        # 使用更详细的方式获取编译信息
+        make -j1 V=sc info 2>&1 || echo "make info 失败，但继续编译过程"
         echo "=========================================="
 
     - name: 下载编译所需文件
       run: |
         cd openwrt
         echo "下载依赖文件..."
-        make download -j$(nproc)
+        make download -j$(nproc) || make download -j1
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -delete
 
@@ -152,8 +163,8 @@ jobs:
       run: |
         cd openwrt
         echo "开始编译..."
-        # 使用减少的并行任务数
-        make $MAKE_ARGS V=s 2>&1 | tee build.log | grep -E '^(CC|CXX|LD|INSTALL|make)'
+        # 使用减少的并行任务数，并启用详细输出
+        make $MAKE_ARGS V=s 2>&1 | tee build.log
 
     - name: 检查空间使用情况
       run: |
